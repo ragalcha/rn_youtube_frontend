@@ -805,7 +805,10 @@ input {
     margin-bottom: 23px;
   }
 
-  .plyr__video-wrapper {
-    margin-top: 75px;
+  /* .plyr__video-wrapper {
+    margin-top: 75px !important;
+  } */
+  .video-player-container {
+    margin-top: 75px !important;
   }
 }

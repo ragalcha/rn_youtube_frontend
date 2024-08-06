@@ -59,7 +59,9 @@ const VideoPlayPage = () => {
                <div className="main clearfix position-relative">
                <Header />
                </div>
+             <div className = "video-player-container">
              <video ref={playerRef} id="player" playsInline controls></video>
+             </div>  
             <div>
                 <Toaster />
             </div>

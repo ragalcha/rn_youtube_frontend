@@ -207,7 +207,7 @@ function SavedVideo() {
                                 {userRole == 'Admin' && (<> 
 									<div class="spec_1im1 clearfix edit-video-for-admin">
 										<h5 className="mb-0 mt-4 text-uppercase bg-success p-2">
-											<Link className="nav-link" to={`/editpost/${post._id}`}>Edit<i className="fa fa-edit ms-1"></i></Link>
+											<Link className="nav-link" to={`/editpost/${post.video._id}`}>Edit<i className="fa fa-edit ms-1"></i></Link>
 										</h5>
 									</div>
 								</>)}

@@ -46,7 +46,7 @@ function EditPostPage() {
                 console.log("Tags", response.data.tags);
             } catch (error) {
                 console.error('Error fetching tags:', error);
-                toast.error("Failed to load tags");
+                // toast.error("Failed to load tags");
             }
         };
 
