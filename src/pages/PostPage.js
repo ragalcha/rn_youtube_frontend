@@ -29,7 +29,7 @@ function PostPage() {
             formData.append('postTags', JSON.stringify(selectedCategories)); // Store IDs as JSON string
             formData.append('imdbScore', imdbScore);
 
-            const response = await axios.post('http://localhost:3001/api/v1/post/createpost', formData, {
+            const response = await axios.post('https://rn-youtube-backend.onrender.com/api/v1/post/createpost', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${accessToken}` // Use the access token from cookies
@@ -57,7 +57,7 @@ function PostPage() {
 
         const fetchCategories = async () => {
             try {
-                const response = await axios.get('http://localhost:3001/api/v1/category/categories');
+                const response = await axios.get('https://rn-youtube-backend.onrender.com/api/v1/category/categories');
                 setCategories(response.data.data); // Set categories in state
             } catch (error) {
                 console.error("Error fetching categories:", error); // Handle and log any errors

@@ -18,12 +18,12 @@ function UserProfilePage() {
     });
     const navigate = useNavigate();
     const { userId } = useParams();
-    const backgroundVideo = 'http://localhost:3000/video/file_example_MP4_640_3MG.mp4';
+    const backgroundVideo = 'https://rn-youtube-backend.onrender.com/video/file_example_MP4_640_3MG.mp4';
 
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await axios.get(`http://localhost:3001/api/v1/user/user/${userId}`, {
+                const response = await axios.get(`https://rn-youtube-backend.onrender.com/api/v1/user/user/${userId}`, {
                     headers: {
                         'Authorization': `Bearer ${getCookie('accessToken')}`
                     }
@@ -61,7 +61,7 @@ function UserProfilePage() {
         e.preventDefault();
         try {
             console.log()
-            const response = await axios.put(`http://localhost:3001/api/v1/user/update/${userId}`, formData, {
+            const response = await axios.put(`https://rn-youtube-backend.onrender.com/api/v1/user/update/${userId}`, formData, {
                 headers: {
                     'Authorization': `Bearer ${getCookie('accessToken')}`
                 }

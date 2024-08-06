@@ -20,7 +20,7 @@ function RegisterPage() {
       console.log('firstName', firstName, 'lastName', lastName,'email', email, 'password', password);
       try {
        
-        const response = await axios.post('http://localhost:3001/api/v1/user/register', {
+        const response = await axios.post('https://rn-youtube-backend.onrender.coms/api/v1/user/register', {
             firstName,
             lastName,
             userName,

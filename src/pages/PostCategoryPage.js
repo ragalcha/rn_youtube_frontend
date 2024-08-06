@@ -32,7 +32,7 @@ function PostCategoryPage() {
 
     const fetchCategories = async () => {
         try {
-            const response = await axios.get('http://localhost:3001/api/v1/category/categories');
+            const response = await axios.get('https://rn-youtube-backend.onrender.com/api/v1/category/categories');
             console.log(response.data.data);
             setCategories(response.data.data);
         } catch (error) {
@@ -43,7 +43,7 @@ function PostCategoryPage() {
 
     const handleCreateCategory = async () => {
         try {
-            const response = await axios.post('http://localhost:3001/api/v1/category/create', newCategory);
+            const response = await axios.post('https://rn-youtube-backend.onrender.com/api/v1/category/create', newCategory);
             toast.success('Category created successfully.');
             fetchCategories();
             setShowCreateModal(false);
@@ -56,7 +56,7 @@ function PostCategoryPage() {
 
     const handleUpdateCategory = async () => {
         try {
-            const response = await axios.put(`http://localhost:3001/api/v1/category/update/${currentCategory._id}`, currentCategory);
+            const response = await axios.put(`https://rn-youtube-backend.onrender.com/api/v1/category/update/${currentCategory._id}`, currentCategory);
             toast.success('Category updated successfully.');
             fetchCategories();
             setShowEditModal(false);
@@ -68,7 +68,7 @@ function PostCategoryPage() {
 
     const handleDeleteCategory = async () => {
         try {
-            await axios.delete(`http://localhost:3001/api/v1/category/delete/${currentCategory._id}`);
+            await axios.delete(`https://rn-youtube-backend.onrender.com/api/v1/category/delete/${currentCategory._id}`);
             toast.success('Category deleted successfully.');
             fetchCategories();
             setShowDeleteModal(false);

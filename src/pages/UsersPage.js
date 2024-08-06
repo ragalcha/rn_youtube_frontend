@@ -41,7 +41,7 @@ function UsersPage() {
 
     const fetchUsers = async () => {
         try {
-            const response = await axios.get('http://localhost:3001/api/v1/user/users', {
+            const response = await axios.get('https://rn-youtube-backend.onrender.com/api/v1/user/users', {
                 headers: {
                     'Authorization': `Bearer ${getCookie('accessToken')}`
                 }
@@ -56,7 +56,7 @@ function UsersPage() {
 
     const fetchRoles = async () => {
         try {
-            const response = await axios.get('http://localhost:3001/api/v1/userrole/userroles');
+            const response = await axios.get('https://rn-youtube-backend.onrender.com/api/v1/userrole/userroles');
             setRoles(response.data.data.roles);
             console.log("roles",response.data.data.roles);
         } catch (error) {
@@ -67,7 +67,7 @@ function UsersPage() {
 
     const handleCreateUser = async () => {
         try {
-            await axios.post('http://localhost:3001/api/v1/user/register', newUser);
+            await axios.post('https://rn-youtube-backend.onrender.com/api/v1/user/register', newUser);
             toast.success('User created successfully.');
             fetchUsers();
             setShowCreateModal(false);
@@ -88,7 +88,7 @@ function UsersPage() {
     const handleUpdateUser = async () => {
         try {
             console.log("token",getCookie('accessToken'),"userid",currentUser._id,"newuser",currentUser);
-            await axios.put(`http://localhost:3001/api/v1/user/update/${currentUser._id}`, currentUser, {
+            await axios.put(`https://rn-youtube-backend.onrender.com/api/v1/user/update/${currentUser._id}`, currentUser, {
                 headers: {
                     'Authorization': `Bearer ${getCookie('accessToken')}`
                 }
@@ -104,7 +104,7 @@ function UsersPage() {
 
     const handleDeleteUser = async () => {
         try {
-            await axios.delete(`http://localhost:3001/api/v1/user/delete/${currentUser._id}`, {
+            await axios.delete(`https://rn-youtube-backend.onrender.com/api/v1/user/delete/${currentUser._id}`, {
                 headers: {
                     'Authorization': `Bearer ${getCookie('accessToken')}`
                 }

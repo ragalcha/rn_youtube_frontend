@@ -7,7 +7,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 
-const socket = io('http://localhost:3001'); // Connect to your server
+const socket = io('https://rn-youtube-backend.onrender.com'); // Connect to your server
 function Header() {
     const navigate = useNavigate();
     const [accessToken, setAccessToken] = useState(getCookie('accessToken'));
@@ -24,7 +24,7 @@ function Header() {
             return navigate('/login');
             console.log("i am starting the logout the process");
             const response = await axios.post(
-                'http://localhost:3001/api/v1/user/logout',
+                'https://rn-youtube-backend.onrender.com/api/v1/user/logout',
                  null, // No body data for this request
                 {
                     withCredentials: true,

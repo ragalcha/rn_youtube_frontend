@@ -24,7 +24,7 @@ function HeroVideo() {
                 }
                 console.log("userId------------->", userId, userRole);
                 console.log("user constant id ", userd_id);
-                const response = await axios.get('http://localhost:3001/api/v1/post/recentposts');
+                const response = await axios.get('https://rn-youtube-backend.onrender.com/api/v1/post/recentposts');
                 console.log("respons-------------->e", response);
                 const data = response.data;
                 if (Array.isArray(data.recentPosts)) {

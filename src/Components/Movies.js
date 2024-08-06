@@ -25,7 +25,7 @@ function Movies() {
 					}
 				}
 
-				const response = await axios.get('http://localhost:3001/api/v1/post/posts', {
+				const response = await axios.get('https://rn-youtube-backend.onrender.com/api/v1/post/posts', {
 					headers: {
 						'Authorization': `Bearer ${getCookie('accessToken')}`
 					}
@@ -47,7 +47,7 @@ function Movies() {
 			try {
           
 
-                const response = await axios.get('http://localhost:3001/api/v1/like/liked', {
+                const response = await axios.get('https://rn-youtube-backend.onrender.com/api/v1/like/liked', {
                     headers: {
                         'Authorization': `Bearer ${getCookie('accessToken')}`
                     }
@@ -78,7 +78,7 @@ function Movies() {
 		try {
             console.log("post----------------------->id", post);
 
-			const response = await axios.post(`http://localhost:3001/api/v1/like/like/${post}`, {
+			const response = await axios.post(`https://rn-youtube-backend.onrender.com/api/v1/like/like/${post}`, {
 				headers: {
 					'Authorization': `Bearer ${getCookie('accessToken')}`
 				}
@@ -95,7 +95,7 @@ function Movies() {
             
 			console.log("unliked ----->",post);
 
-			const response = await axios.delete(`http://localhost:3001/api/v1/like/unlike/${post}`, {
+			const response = await axios.delete(`https://rn-youtube-backend.onrender.com/api/v1/like/unlike/${post}`, {
 				headers: {
 					'Authorization': `Bearer ${getCookie('accessToken')}`
 				}
@@ -113,7 +113,7 @@ function Movies() {
 		try {
 	  
 
-			const response = await axios.get('http://localhost:3001/api/v1/like/liked', {
+			const response = await axios.get('https://rn-youtube-backend.onrender.com/api/v1/like/liked', {
 				headers: {
 					'Authorization': `Bearer ${getCookie('accessToken')}`
 				}

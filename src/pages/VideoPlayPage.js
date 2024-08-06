@@ -13,7 +13,7 @@ const VideoPlayPage = () => {
     useEffect(() => {
         const fetchPost = async () => {
             try {
-                const response = await axios.get(`http://localhost:3001/api/v1/post/post/${videoId}`, {
+                const response = await axios.get(`https://rn-youtube-backend.onrender.com/api/v1/post/post/${videoId}`, {
                     headers: {
                         'Authorization': `Bearer ${getCookie('accessToken')}`
                     }

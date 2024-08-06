@@ -37,7 +37,7 @@ function Postcrud() {
 
     const fetchPosts = async () => {
         try {
-            const response = await axios.get('http://localhost:3001/api/v1/post/posts');
+            const response = await axios.get('https://rn-youtube-backend.onrender.com/api/v1/post/posts');
             setPosts(response.data.posts);
         } catch (error) {
             console.error('Error fetching posts:', error);
@@ -53,7 +53,7 @@ function Postcrud() {
         if (newPost.video) formData.append('video', newPost.video);
 
         try {
-            await axios.post('http://localhost:3001/api/v1/post/createpost', formData,  {
+            await axios.post('https://rn-youtube-backend.onrender.com/api/v1/post/createpost', formData,  {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${getCookie('accessToken')}` // Use the access token from cookies
@@ -77,7 +77,7 @@ function Postcrud() {
         if (currentPost.video) formData.append('video', currentPost.video);
 
         try {
-            await axios.put(`http://localhost:3001/api/v1/post/updatepost/${currentPost._id}`, formData,  {
+            await axios.put(`https://rn-youtube-backend.onrender.com/api/v1/post/updatepost/${currentPost._id}`, formData,  {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${getCookie('accessToken')}` // Use the access token from cookies
@@ -94,7 +94,7 @@ function Postcrud() {
 
     const handleDeletePost = async () => {
         try {
-            await axios.delete(`http://localhost:3001/api/v1/post/deletepost/${currentPost._id}`,{
+            await axios.delete(`https://rn-youtube-backend.onrender.com/api/v1/post/deletepost/${currentPost._id}`,{
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${getCookie('accessToken')}` // Use the access token from cookies

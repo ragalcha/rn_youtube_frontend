@@ -37,7 +37,7 @@ function EditPostPage() {
         // Fetch all tags
         const fetchTags = async () => {
             try {
-                const response = await axios.get('http://localhost:3001/api/v1/tags', {
+                const response = await axios.get('https://rn-youtube-backend.onrender.com/api/v1/tags', {
                     headers: {
                         'Authorization': `Bearer ${getCookie('accessToken')}`
                     }
@@ -53,7 +53,7 @@ function EditPostPage() {
         // Fetch the specific post
         const fetchPost = async () => {
             try {
-                const response = await axios.get(`http://localhost:3001/api/v1/post/post/${postId}`, {
+                const response = await axios.get(`https://rn-youtube-backend.onrender.com/api/v1/post/post/${postId}`, {
                     headers: {
                         'Authorization': `Bearer ${getCookie('accessToken')}`
                     }
@@ -90,7 +90,7 @@ function EditPostPage() {
             formData.append('postTags', postTags.split(',').map(tag => tag.trim())); // Convert string back to array
             formData.append('imdbScore', imdbScore);
 
-            const response = await axios.put(`http://localhost:3001/api/v1/post/updatepost/${postId}`, formData, {
+            const response = await axios.put(`https://rn-youtube-backend.onrender.com/api/v1/post/updatepost/${postId}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${accessToken}`

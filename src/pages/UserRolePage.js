@@ -32,7 +32,7 @@ function UserRolePage() {
 
     const fetchRoles = async () => {
         try {
-            const response = await axios.get('http://localhost:3001/api/v1/userrole/userroles');
+            const response = await axios.get('https://rn-youtube-backend.onrender.com/api/v1/userrole/userroles');
             console.log(response.data.data.roles);
             setRoles(response.data.data.roles);
         } catch (error) {
@@ -43,7 +43,7 @@ function UserRolePage() {
 
     const handleCreateRole = async () => {
         try {
-            const response = await axios.post('http://localhost:3001/api/v1/userrole/create', newRole);
+            const response = await axios.post('https://rn-youtube-backend.onrender.com/api/v1/userrole/create', newRole);
             toast.success('Role created successfully.');
             fetchRoles();
             setShowCreateModal(false);
@@ -56,7 +56,7 @@ function UserRolePage() {
 
     const handleUpdateRole = async () => {
         try {
-            const response = await axios.put(`http://localhost:3001/api/v1/userrole/update/${currentRole._id}`, currentRole);
+            const response = await axios.put(`https://rn-youtube-backend.onrender.com/api/v1/userrole/update/${currentRole._id}`, currentRole);
             toast.success('Role updated successfully.');
             fetchRoles();
             setShowEditModal(false);
@@ -68,7 +68,7 @@ function UserRolePage() {
 
     const handleDeleteRole = async () => {
         try {
-            await axios.delete(`http://localhost:3001/api/v1/userrole/delete/${currentRole._id}`);
+            await axios.delete(`https://rn-youtube-backend.onrender.com/api/v1/userrole/delete/${currentRole._id}`);
             toast.success('Role deleted successfully.');
             fetchRoles();
             setShowDeleteModal(false);
