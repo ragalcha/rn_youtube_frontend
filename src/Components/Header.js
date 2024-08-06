@@ -145,7 +145,7 @@ function Header() {
 
                             </ul>
                             <ul className="navbar-nav mb-0 ms-auto">
-                                <li className="nav-item dropdown">
+                                {/* <li className="nav-item dropdown">
                                     <a className="nav-link dropdown-toggle dropdown_search" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="true">
                                         <i className="fa fa-search"></i>
                                     </a>
@@ -186,7 +186,7 @@ function Header() {
                                                 </div>
                                             </div></li>
                                     </ul>
-                                </li>
+                                </li> */}
                                  
                                 {userId && (<> <li className="nav-item">
                                     <Link className="nav-link" to={`/user/${userId}`}><i className="fa fa-user fs-4 align-middle me-1 lh-1 col_red"></i> {userName} </Link>
