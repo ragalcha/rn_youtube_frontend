@@ -45,7 +45,7 @@ function RegisterPage() {
         <>
          <div class="main clearfix position-relative">
             <Header />
-            <form className="login-form" onSubmit={handleRegister}>
+            <form className="login-form register-form" onSubmit={handleRegister}>
                 <p className="login-text">
                     <span className="fa-stack fa-lg">
                         <i className="fa fa-circle fa-stack-2x"></i>

@@ -103,6 +103,7 @@ function PostCategoryPage() {
                         <h2 className="text-white">Categories</h2>
                         <Button variant="primary" onClick={() => setShowCreateModal(true)}>Create Category</Button>
                     </div>
+                    <div className="table-responsive">
                     <table className="table table-striped">
                         <thead>
                             <tr>
@@ -126,6 +127,7 @@ function PostCategoryPage() {
                             ))}
                         </tbody>
                     </table>
+                    </div>
                 </div>
 
                 {/* Create Category Modal */}

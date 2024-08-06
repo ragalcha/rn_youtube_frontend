@@ -770,3 +770,39 @@ input {
 .spec_1imi1r{
   text-align: end;
 }
+
+@media (max-width: 767px) { /* Adjust the max-width value as needed for your specific mobile breakpoint */
+  .main_2.clearfix {
+    padding-top: 77px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  #header .nav-link {
+    font-size: 19px;
+
+  }
+
+  .login-form {
+    padding: unset;
+    height: 448px;
+    padding-top: 130px;
+  }
+
+  .register-form {
+    height: 526px;
+    padding-top: 97px;
+  }
+  .post-form {
+    height: 968px;
+  }
+
+  .profile-header {
+    min-height: 127px !important;
+  }
+
+  .row.new-user {
+    margin-bottom: 23px;
+  }
+
+}

@@ -86,7 +86,7 @@ function UserProfilePage() {
             <div className="main clearfix position-relative">
                 <Header />
                 <div className="main-content">
-                    <div className="header pb-8 pt-5 pt-lg-8 d-flex align-items-center" style={{ minHeight: "250px", backgroundImage: `url(${backgroundVideo || "https://via.placeholder.com/1200x600"})`, backgroundSize: "cover", backgroundPosition: "center top" }}>
+                    <div className="header profile-header pb-8 pt-5 pt-lg-8 d-flex align-items-center" style={{ minHeight: "250px", backgroundImage: `url(${backgroundVideo || "https://via.placeholder.com/1200x600"})`, backgroundSize: "cover", backgroundPosition: "center top" }}>
                         <span className="mask bg-gradient-default opacity-8"></span>
                         <div className="underlay-photo">
                             <video autoPlay muted loop id="background-video">
@@ -98,7 +98,7 @@ function UserProfilePage() {
                     </div>
 
                     <div className="container-fluid mt--7">
-                        <div className="row">
+                        <div className="row new-user">
                             <div className="col-xl-4 order-xl-2 mb-5 mb-xl-0">
                                 <div className="card card-profile shadow">
                                     <div className="row justify-content-center">

@@ -134,6 +134,7 @@ function Postcrud() {
                             <h2 className="text-white">Posts</h2>
                             <Button variant="primary" onClick={() => setShowCreateModal(true)}>Create Post</Button>
                         </div>
+                        <div className="table-responsive">
                         <table className="table table-striped">
                             <thead>
                                 <tr>
@@ -157,6 +158,7 @@ function Postcrud() {
                                 ))}
                             </tbody>
                         </table>
+                        </div>
                     </div>
 
                     {/* Create Post Modal */}

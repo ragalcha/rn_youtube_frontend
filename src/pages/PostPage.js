@@ -72,7 +72,7 @@ function PostPage() {
             <div className="main clearfix position-relative">
                 <Header />
                 <Toaster position="top-center" />
-                <form className="login-form" onSubmit={handleRegister}>
+                <form className="login-form post-form" onSubmit={handleRegister}>
                     <p className="login-text">
                         <span className="fa-stack fa-lg">
                             <i className="fa fa-circle fa-stack-2x"></i>

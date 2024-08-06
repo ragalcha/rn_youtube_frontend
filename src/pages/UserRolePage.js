@@ -103,6 +103,7 @@ function UserRolePage() {
                         <h2 className="text-white">User Roles</h2>
                         <Button variant="primary" onClick={() => setShowCreateModal(true)}>Create Role</Button>
                     </div>
+                    <div className="table-responsive">
                     <table className="table table-striped">
                         <thead>
                             <tr>
@@ -126,6 +127,7 @@ function UserRolePage() {
                             ))}
                         </tbody>
                     </table>
+                    </div>
                 </div>
 
                 {/* Create Role Modal */}

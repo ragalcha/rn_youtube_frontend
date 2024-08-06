@@ -143,6 +143,7 @@ function UsersPage() {
                             <h2 className="text-white">Users</h2>
                             <Button variant="primary" onClick={() => setShowCreateModal(true)}>Create User</Button>
                         </div>
+                        <div className="table-responsive">
                         <table className="table table-striped">
                             <thead>
                                 <tr>
@@ -172,6 +173,7 @@ function UsersPage() {
                                 ))}
                             </tbody>
                         </table>
+                        </div>
                     </div>
 
                     {/* Create User Modal */}
