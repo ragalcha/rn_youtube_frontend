@@ -14,6 +14,7 @@ function Header() {
     const [userId, setUserId] = useState(null);
     const [userName, setUserName] = useState(null);
     const [userRole, setUserRole] = useState(null);
+    const [allTags, setAllTags] = useState([]);
     
     const logout = async (e) => {
         try {
@@ -63,6 +64,25 @@ function Header() {
             setUserName(user.userName);
             setUserRole(user.userRole.name);
         }
+
+
+        const fetchTags = async () => {
+            try {
+                const response = await axios.get('http://localhost:3001/api/v1/category/categories', {
+                    headers: {
+                        'Authorization': `Bearer ${getCookie('accessToken')}`
+                    }
+                });
+                setAllTags(response.data.data); // Adjust based on your response structure
+                console.log("Tags----->on header", response.data.data);
+            } catch (error) {
+                console.error('Error fetching tags:', error);
+                // toast.error("Failed to load tags");
+            }
+        };
+
+        
+        fetchTags();
         const navbarSticky = document.getElementById("navbar_sticky");
         const navbarHeight = navbarSticky ? navbarSticky.offsetHeight : 0;
         const sticky = navbarSticky ? navbarSticky.offsetTop : 0;
@@ -124,6 +144,16 @@ function Header() {
                                     </ul>
                                 </li>
                                 </>)}
+                                <li className="nav-item dropdown">
+                                    <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown01" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Categories
+                                    </a>
+                                    <ul className="dropdown-menu drop_1" aria-labelledby="navbarDropdown01">
+                                    {allTags.map((tag, index) => (
+                                        <Link className="dropdown-item" to={`/category/${tag.title}/${tag._id}`}>{tag.title}</Link>
+                                    ))}
+                                    </ul>
+                                </li>
 
                                 {/* <li className="nav-item dropdown">
                                     <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
