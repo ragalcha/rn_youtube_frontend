@@ -68,7 +68,7 @@ function Header() {
 
         const fetchTags = async () => {
             try {
-                const response = await axios.get('http://localhost:3001/api/v1/category/categories', {
+                const response = await axios.get('https://rn-youtube-backend.onrender.com/api/v1/category/categories', {
                     headers: {
                         'Authorization': `Bearer ${getCookie('accessToken')}`
                     }
@@ -81,7 +81,7 @@ function Header() {
             }
         };
 
-        
+
         fetchTags();
         const navbarSticky = document.getElementById("navbar_sticky");
         const navbarHeight = navbarSticky ? navbarSticky.offsetHeight : 0;
