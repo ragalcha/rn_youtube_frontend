@@ -19,6 +19,7 @@ import UsersPage from './pages/UsersPage';
 import VideoPlayPage from './pages/VideoPlayPage';
 import Postcrud from './pages/Postcrud';
 import SavedVideoPage from './pages/SavedVideoPage';
+import CategoryPage from './pages/CategoryPage';
 function App() {
   
 
@@ -40,6 +41,7 @@ function App() {
           <Route path="/video/:videoId" element={<VideoPlayPage />} /> 
           <Route path="/post/crud" element={<Postcrud />} /> 
           <Route path="/saved" element={<SavedVideoPage />} />
+          <Route path="/category/:categoryName/:categoryId" element={<CategoryPage />} />
         </Routes>
         <Footer />
       </Router>
