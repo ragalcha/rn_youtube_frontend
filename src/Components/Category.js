@@ -28,12 +28,12 @@ function Category({ categorydata }) {
 				if (user) {
 					setUserId(user._id);
 					
-					if (user.userRole.name === 'Admin') {
+					if (user?.userRole?.name === 'Admin') {
 						setUserRole('Admin');
 					}
 				}
 
-				const response = await axios.get(`https://rn-youtube-backend.onrender.com/api/v1/post/postsbytag/${categoryId}`, {
+				const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/post/postsbytag/${categoryId}`, {
 					headers: {
 						'Authorization': `Bearer ${getCookie('accessToken')}`
 					}

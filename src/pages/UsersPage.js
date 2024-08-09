@@ -7,6 +7,8 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import { getCookie, setCookie } from '../utility/cookieUtils';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import Footer from '../Components/Footer';
+import Loading from '../Components/Loading';
 function UsersPage() {
     const navigate = useNavigate();
     const [users, setUsers] = useState([]);
@@ -15,6 +17,7 @@ function UsersPage() {
     const [showEditModal, setShowEditModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [newUser, setNewUser] = useState({
         firstName: '',
         lastName: '',
@@ -41,13 +44,14 @@ function UsersPage() {
 
     const fetchUsers = async () => {
         try {
-            const response = await axios.get('https://rn-youtube-backend.onrender.com/api/v1/user/users', {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/user/users`, {
                 headers: {
                     'Authorization': `Bearer ${getCookie('accessToken')}`
                 }
             });
             console.log("users",response.data.data.customers);
             setUsers(response.data.data.customers);
+            setLoading(false);
         } catch (error) {
             console.error('Error fetching users:', error);
             toast.error('Failed to fetch users.');
@@ -56,7 +60,7 @@ function UsersPage() {
 
     const fetchRoles = async () => {
         try {
-            const response = await axios.get('https://rn-youtube-backend.onrender.com/api/v1/userrole/userroles');
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/userrole/userroles`);
             setRoles(response.data.data.roles);
             console.log("roles",response.data.data.roles);
         } catch (error) {
@@ -67,7 +71,7 @@ function UsersPage() {
 
     const handleCreateUser = async () => {
         try {
-            await axios.post('https://rn-youtube-backend.onrender.com/api/v1/user/register', newUser);
+            await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/user/register`, newUser);
             toast.success('User created successfully.');
             fetchUsers();
             setShowCreateModal(false);
@@ -88,7 +92,7 @@ function UsersPage() {
     const handleUpdateUser = async () => {
         try {
             console.log("token",getCookie('accessToken'),"userid",currentUser._id,"newuser",currentUser);
-            await axios.put(`https://rn-youtube-backend.onrender.com/api/v1/user/update/${currentUser._id}`, currentUser, {
+            await axios.put(`${process.env.REACT_APP_API_URL}/api/v1/user/update/${currentUser._id}`, currentUser, {
                 headers: {
                     'Authorization': `Bearer ${getCookie('accessToken')}`
                 }
@@ -104,7 +108,7 @@ function UsersPage() {
 
     const handleDeleteUser = async () => {
         try {
-            await axios.delete(`https://rn-youtube-backend.onrender.com/api/v1/user/delete/${currentUser._id}`, {
+            await axios.delete(`${process.env.REACT_APP_API_URL}/api/v1/user/delete/${currentUser._id}`, {
                 headers: {
                     'Authorization': `Bearer ${getCookie('accessToken')}`
                 }
@@ -117,7 +121,14 @@ function UsersPage() {
             toast.error('Failed to delete user.');
         }
     };
-
+    if (loading) {
+        return (
+           <Loading
+           text = "Users"
+           title = "Users"
+           />
+        )
+    }
     return (
         <>
             <div className="main clearfix position-relative">
@@ -321,6 +332,7 @@ function UsersPage() {
                     <Toaster />
                 </div>
             </div>
+            <Footer/>
         </>
     );
 }

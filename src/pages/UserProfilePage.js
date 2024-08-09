@@ -4,26 +4,36 @@ import axios from 'axios';
 import { getCookie, setCookie } from '../utility/cookieUtils';
 import { Toaster, toast } from 'react-hot-toast';
 import Header from '../Components/Header';
+import Footer from '../Components/Footer';
+import { Link } from 'react-router-dom';
 
 function UserProfilePage() {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(0);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
         userName: '',
+
         email: '',
         password: ''
     });
+
+    const [trialRemaining, setTrialRemaining] = useState(0);
+    const [subscriptionRemaining, setSubscriptionRemaining] = useState(0);
     const navigate = useNavigate();
     const { userId } = useParams();
-    const backgroundVideo = 'https://rn-youtube-backend.onrender.com/video/file_example_MP4_640_3MG.mp4';
-
+    const backgroundVideo = `${process.env.REACT_APP_API_URL}/video/file_example_MP4_640_3MG.mp4`;
+    
     useEffect(() => {
+        const activesday = getCookie('SubscriptionActiveDays');
+        if (activesday) {
+            setSubscriptionRemaining(activesday);
+        }
         const fetchUser = async () => {
             try {
-                const response = await axios.get(`https://rn-youtube-backend.onrender.com/api/v1/user/user/${userId}`, {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/user/user/${userId}`, {
                     headers: {
                         'Authorization': `Bearer ${getCookie('accessToken')}`
                     }
@@ -38,6 +48,30 @@ function UserProfilePage() {
                     email: userProfile.email,
                     password: ''
                 });
+                console.log("user profile--->01", userProfile);
+                if (userProfile.trialActive) {
+                    // Example dates
+                    const trialExpiresAt = new Date(userProfile.trialExpiresAt);
+                    const trialStartedAt = new Date(userProfile.trialStartedAt);
+                    const currentDate = new Date();
+
+                    // Convert dates to UTC midnight
+                    const startOfTrial = new Date(trialStartedAt.getUTCFullYear(), trialStartedAt.getUTCMonth(), trialStartedAt.getUTCDate());
+                    const endOfTrial = new Date(trialExpiresAt.getUTCFullYear(), trialExpiresAt.getUTCMonth(), trialExpiresAt.getUTCDate());
+                    const today = new Date(currentDate.getUTCFullYear(), currentDate.getUTCMonth(), currentDate.getUTCDate());
+
+                    const timeDiff = endOfTrial - today;
+                    const daysRemaining = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
+                    // Adjust for the trial starting date, if needed
+                    // Ensure the trial does not go below 0
+                    const daysSinceStart = Math.floor((today - startOfTrial) / (1000 * 60 * 60 * 24));
+                    const totalTrialDays = Math.floor((endOfTrial - startOfTrial) / (1000 * 60 * 60 * 24));
+
+                    const effectiveDaysRemaining = Math.max(0, totalTrialDays - daysSinceStart);
+
+                    setTrialRemaining(effectiveDaysRemaining);
+                }
                 setLoading(false);
             } catch (error) {
                 console.error('Error fetching user:', error);
@@ -60,8 +94,8 @@ function UserProfilePage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            console.log()
-            const response = await axios.put(`https://rn-youtube-backend.onrender.com/api/v1/user/update/${userId}`, formData, {
+
+            const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/v1/user/update/${userId}`, formData, {
                 headers: {
                     'Authorization': `Bearer ${getCookie('accessToken')}`
                 }
@@ -77,8 +111,42 @@ function UserProfilePage() {
         }
     };
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error}</p>;
+    if (loading) {
+        return (
+            <>
+                <div className="main clearfix position-relative">
+                    <Header />
+                    <div className="loding-custom">
+                        <div className="spinner-grow text-primary" role="status">
+                            <span className="sr-only">Loading...</span>
+                        </div>
+                        <div className="spinner-grow text-secondary" role="status">
+                            <span className="sr-only">Loading...</span>
+                        </div>
+                        <div className="spinner-grow text-success" role="status">
+                            <span className="sr-only">Loading...</span>
+                        </div>
+                        <div className="spinner-grow text-danger" role="status">
+                            <span className="sr-only">Loading...</span>
+                        </div>
+                        <div className="spinner-grow text-warning" role="status">
+                            <span className="sr-only">Loading...</span>
+                        </div>
+                        <div className="spinner-grow text-info" role="status">
+                            <span className="sr-only">Loading...</span>
+                        </div>
+                        <div className="spinner-grow text-light" role="status">
+                            <span className="sr-only">Loading...</span>
+                        </div>
+                        <div className="spinner-grow text-dark" role="status">
+                            <span className="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <Footer />
+            </>
+        )
+    }
     if (!user) return <p>No user data available.</p>;
 
     return (
@@ -121,25 +189,56 @@ function UserProfilePage() {
                                             <div className="col">
                                                 <div className="card-profile-stats d-flex justify-content-center mt-md-5">
                                                     <div>
-                                                        <span className="description">{user.userRole.name}</span>
+                                                        <span className="description">{user?.userRole?.name}</span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="text-center">
                                             <h3>
-                                                {user.userName}
+                                                {user?.userName}
                                             </h3>
                                             <div className="h5 font-weight-300">
                                                 <i className="ni location_pin mr-2"></i>{user.email}
                                             </div>
-                                            <div className="h5 mt-4">
-                                                <i className="ni business_briefcase-24 mr-2"></i>{user.createdAt}
-                                            </div>
-                                            <div>
-                                                <i className="ni education_hat mr-2"></i>{user.updatedAt}
-                                            </div>
-                                            <hr className="my-4" />
+                                            {!user.subscriptionActive && user.trialActive && (<>
+                                                <h3>
+                                                    Subscribtion Details: {user.trialActive ? " Free Trial Active" : "Inactive"}
+                                                </h3>
+                                                <div className="h5 mt-4">
+                                                    <i className="ni business_briefcase-24 mr-2"></i>Remaining Days: {trialRemaining}
+                                                </div>
+                                                <div>
+                                                    <i className="ni education_hat mr-2"></i>Expired date: {new Date(user?.trialExpiresAt).getDate()}/
+                                                    {new Date(user?.trialExpiresAt).getMonth()}/{new Date(user?.trialExpiresAt).getFullYear()}
+                                                </div>
+                                                <hr className="my-4" />
+                                            </>)}
+                                            {user?.subscriptionActive && (<>
+                                                <h3>
+                                                    Subscribtion Details01: {user?.subscriptionPlan?.name ? user.subscriptionPlan.name : "Inactive"}
+                                                </h3>
+                                                <div className="h5 mt-4">
+                                                    <i className="ni business_briefcase-24 mr-2"></i>Remaining Days: {subscriptionRemaining}
+                                                </div>
+                                                <div>
+                                                    <i className="ni education_hat mr-2"></i>Expired date: {new Date(user?.subscriptionExpiresAt).getDate()}/
+                                                    {new Date(user?.subscriptionExpiresAt).getMonth()}/{new Date(user?.subscriptionExpiresAt).getFullYear()}
+                                                </div>
+                                                <hr className="my-4" />
+                                            </>)}
+                                            {!user?.subscriptionActive && !user.trialActive && (<>
+                                                <h3>
+                                                    Subscribtion Details: {user?.subscriptionPlan?.name ? user.subscriptionPlan.name : "Inactive"}
+                                                </h3>
+                                                <div className="h5 mt-4">
+                                                    <i className="ni business_briefcase-24 mr-2"></i>You dont have any subscription
+                                                </div>
+                                                <div>
+                                                    <Link className="btn btn-sm btn-primary" to="/subscribtion" >Subscribe plan</Link>
+                                                </div>
+                                                <hr className="my-4" />
+                                            </>)}
                                         </div>
                                     </div>
                                 </div>
@@ -197,7 +296,7 @@ function UserProfilePage() {
                                                     </div>
                                                 </div> */}
                                             </div>
-                                         
+
                                         </form>
                                     </div>
                                 </div>
@@ -207,6 +306,7 @@ function UserProfilePage() {
                 </div>
                 <Toaster />
             </div>
+            <Footer />
         </>
     );
 }

@@ -20,6 +20,9 @@ import VideoPlayPage from './pages/VideoPlayPage';
 import Postcrud from './pages/Postcrud';
 import SavedVideoPage from './pages/SavedVideoPage';
 import CategoryPage from './pages/CategoryPage';
+import NotFoundPage from './pages/NotFoundPage';
+import SubscriptionPage from './pages/SubscriptionPage';
+import SubscriptionCrudPage from './pages/SubscriptionCrudPage';
 function App() {
   
 
@@ -42,8 +45,12 @@ function App() {
           <Route path="/post/crud" element={<Postcrud />} /> 
           <Route path="/saved" element={<SavedVideoPage />} />
           <Route path="/category/:categoryName/:categoryId" element={<CategoryPage />} />
+           {/* Catch-all route for 404 errors */}
+           <Route path="/subscribtion" element={<SubscriptionPage />} />
+           <Route path="/subscribtion/crud" element={<SubscriptionCrudPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
-        <Footer />
+        {/* <Footer /> */}
       </Router>
     </>
   );

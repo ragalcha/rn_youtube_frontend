@@ -771,6 +771,10 @@ input {
   text-align: end;
 }
 
+.input-group.get-started.w-50.m-auto {
+	display: block;
+}
+
 @media (max-width: 767px) { /* Adjust the max-width value as needed for your specific mobile breakpoint */
   .main_2.clearfix {
     padding-top: 77px;
@@ -804,11 +808,39 @@ input {
   .row.new-user {
     margin-bottom: 23px;
   }
+  .row.spec_1.mt-4.subscription0-card {
+    margin-left: 34px;
+    /* text-align: center; */
+  }
 
   /* .plyr__video-wrapper {
     margin-top: 75px !important;
   } */
   .video-player-container {
-    margin-top: 75px !important;
+    padding-top: 75px;
+  }
+  .card-profile-image {
+    text-align: center;
+  }
+}
+
+
+
+  .loding-custom {
+    height: 100%;
+    padding-top: 10%;
+    padding-bottom: 16%;
+    text-align: center;
+  }
+
+
+.card-profile-image {
+	text-align: center;
+}
+
+
+@media (min-width: 768px) {
+  .d-md-block {
+    padding-bottom: 430px;
   }
 }

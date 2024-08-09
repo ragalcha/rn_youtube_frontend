@@ -3,12 +3,15 @@ import axios from 'axios';
 import { getCookie } from '../utility/cookieUtils';
 import { Link } from 'react-router-dom';
 import { Toaster } from "react-hot-toast";
+import Loading from './Loading';
 
 function SavedVideo() {
     const [posts, setPosts] = useState([]);
     const [userId, setUserId] = useState(null);
     const [savedPosts, setSavedPosts] = useState([]);
     const [userRole, setUserRole] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [data, setData] = useState([]);
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -17,12 +20,12 @@ function SavedVideo() {
             try {
                 if (user) {
                     setUserId(user._id);
-                    if (user.userRole.name === 'Admin') {
+                    if (user?.userRole?.name === 'Admin') {
 						setUserRole('Admin');
 					}
                 }
 
-                const response = await axios.get('https://rn-youtube-backend.onrender.com/api/v1/like/liked', {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/like/liked`, {
                     headers: {
                         'Authorization': `Bearer ${getCookie('accessToken')}`
                     }
@@ -30,7 +33,8 @@ function SavedVideo() {
 
                 // Directly set posts from the response data
                 const data = response.data.data;
-                console.log("Saved video -->", data);
+                console.log("Saved video -->", data,response);
+                setLoading(false);
 
                 if (Array.isArray(data)) {
                     setPosts(data);
@@ -39,8 +43,10 @@ function SavedVideo() {
                     setPosts([]);
                 }
 
-
-                const data1 = response.data.data.map(like => ({
+               if(response?.data?.data?.length ){
+                   
+               
+                const data1 = response?.data?.data?.map(like => ({
 					like: like._id,
 					videoId: like.video._id
 				}));
@@ -52,7 +58,9 @@ function SavedVideo() {
                     console.error('Unexpected response format1:', data1);
                     setPosts([]);
                 }
-
+            }else{
+                setSavedPosts([]);
+            }
             } catch (error) {
                 console.error('Error fetching posts:', error);
             }
@@ -63,7 +71,7 @@ function SavedVideo() {
 		try {
             console.log("post----------------------->id", post);
 
-			const response = await axios.post(`https://rn-youtube-backend.onrender.com/api/v1/like/like/${post}`, {
+			const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/like/like/${post}`, {
 				headers: {
 					'Authorization': `Bearer ${getCookie('accessToken')}`
 				}
@@ -80,7 +88,7 @@ function SavedVideo() {
             
 			console.log("unliked ----->",post);
 
-			const response = await axios.delete(`https://rn-youtube-backend.onrender.com/api/v1/like/unlike/${post}`, {
+			const response = await axios.delete(`${process.env.REACT_APP_API_URL}/api/v1/like/unlike/${post}`, {
 				headers: {
 					'Authorization': `Bearer ${getCookie('accessToken')}`
 				}
@@ -98,25 +106,32 @@ function SavedVideo() {
 		try {
 	  
 
-			const response = await axios.get('https://rn-youtube-backend.onrender.com/api/v1/like/liked', {
+			const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/like/liked`, {
 				headers: {
 					'Authorization': `Bearer ${getCookie('accessToken')}`
 				}
 			});
 
 			// Directly set posts from the response data
-			const data = response.data.data.map(like => ({
+			if(response.data.data.length){
+            const data01 = response?.data?.data?.map(like => ({
 				like: like._id,
 				videoId: like.video._id
 			}));
-			console.log("Saved video on movies componente-->", data);
-
-			if (Array.isArray(data)) {
-				setSavedPosts(data);
+            if (Array.isArray(data01)) {
+				setSavedPosts(data01);
 			} else {
-				console.error('Unexpected response format:', data);
+				console.error('Unexpected response format:', data01);
 				setPosts([]);
 			}
+            setData(data01);
+            }else{
+                setSavedPosts([]);
+                setData([]);
+            }
+			
+
+			
 		} catch (error) {
 			console.error('Error fetching posts:', error);
 		}
@@ -130,6 +145,37 @@ function SavedVideo() {
 		const foundItem = array.find(item => item.videoId === videoIdToCheck);
 		return foundItem ? foundItem.like : null;
 	};
+
+    if (loading) {
+        return (
+            <div className="loding-custom">
+            <div className="spinner-grow text-primary" role="status">
+                <span className="sr-only">Loading...</span>
+            </div>
+            <div className="spinner-grow text-secondary" role="status">
+                <span className="sr-only">Loading...</span>
+            </div>
+            <div className="spinner-grow text-success" role="status">
+                <span className="sr-only">Loading...</span>
+            </div>
+            <div className="spinner-grow text-danger" role="status">
+                <span className="sr-only">Loading...</span>
+            </div>
+            <div className="spinner-grow text-warning" role="status">
+                <span className="sr-only">Loading...</span>
+            </div>
+            <div className="spinner-grow text-info" role="status">
+                <span className="sr-only">Loading...</span>
+            </div>
+            <div className="spinner-grow text-light" role="status">
+                <span className="sr-only">Loading...</span>
+            </div>
+            <div className="spinner-grow text-dark" role="status">
+                <span className="sr-only">Loading...</span>
+            </div>
+        </div>
+        )
+    }
 
     return (
         <>
@@ -158,6 +204,7 @@ function SavedVideo() {
                         </div>
                     </div>
                     <div className="row spec_1 mt-4">
+                    {posts && (<> 
                         {posts.map(post => (
                             <div key={post.video._id} className="col-lg-2 pe-0 col-md-4">
                                 <div className="spec_1im clearfix position-relative">
@@ -221,7 +268,13 @@ function SavedVideo() {
                                 </div>
                             </div>
                         ))}
+                    </>)}
                     </div>
+                    {posts.length ==0 && (<> 
+                        <div className="text-center text-white text-uppercase">
+                      <h3>No saved videos you have</h3>
+                      </div>
+                     </>)}
                 </div>
                 <Toaster />
             </section>

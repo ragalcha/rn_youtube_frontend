@@ -7,6 +7,8 @@ import { Modal, Button } from 'react-bootstrap';
 import { getCookie } from '../utility/cookieUtils';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import Footer from '../Components/Footer';
+import Loading from '../Components/Loading';
 function Postcrud() {
     const navigate = useNavigate();
     const [posts, setPosts] = useState([]);
@@ -14,6 +16,7 @@ function Postcrud() {
     const [showEditModal, setShowEditModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [currentPost, setCurrentPost] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [newPost, setNewPost] = useState({
         title: '',
         body: '',
@@ -37,8 +40,9 @@ function Postcrud() {
 
     const fetchPosts = async () => {
         try {
-            const response = await axios.get('https://rn-youtube-backend.onrender.com/api/v1/post/posts');
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/post/posts`);
             setPosts(response.data.posts);
+            setLoading(false);
         } catch (error) {
             console.error('Error fetching posts:', error);
             toast.error('Failed to fetch posts.');
@@ -53,12 +57,12 @@ function Postcrud() {
         if (newPost.video) formData.append('video', newPost.video);
 
         try {
-            await axios.post('https://rn-youtube-backend.onrender.com/api/v1/post/createpost', formData,  {
+            await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/post/createpost`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${getCookie('accessToken')}` // Use the access token from cookies
-                 }
-             });
+                }
+            });
             toast.success('Post created successfully.');
             fetchPosts();
             setShowCreateModal(false);
@@ -77,12 +81,12 @@ function Postcrud() {
         if (currentPost.video) formData.append('video', currentPost.video);
 
         try {
-            await axios.put(`https://rn-youtube-backend.onrender.com/api/v1/post/updatepost/${currentPost._id}`, formData,  {
+            await axios.put(`${process.env.REACT_APP_API_URL}/api/v1/post/updatepost/${currentPost._id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${getCookie('accessToken')}` // Use the access token from cookies
-                 }
-             });
+                }
+            });
             toast.success('Post updated successfully.');
             fetchPosts();
             setShowEditModal(false);
@@ -94,12 +98,12 @@ function Postcrud() {
 
     const handleDeletePost = async () => {
         try {
-            await axios.delete(`https://rn-youtube-backend.onrender.com/api/v1/post/deletepost/${currentPost._id}`,{
+            await axios.delete(`${process.env.REACT_APP_API_URL}/api/v1/post/deletepost/${currentPost._id}`, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${getCookie('accessToken')}` // Use the access token from cookies
-                 }
-             });
+                }
+            });
             toast.success('Post deleted successfully.');
             fetchPosts();
             setShowDeleteModal(false);
@@ -108,6 +112,15 @@ function Postcrud() {
             toast.error('Failed to delete post.');
         }
     };
+    
+    if (loading) {
+        return (
+           <Loading
+           text = "Posts"
+           title = "Posts"
+           />
+        )
+    }
 
     return (
         <>
@@ -120,8 +133,8 @@ function Postcrud() {
                                 <div className="col-md-12">
                                     <h2 className="text-white">Posts</h2>
                                     <h6 className="mb-0 mt-3 fw-normal col_red">
-                                    <Link className="text-light" to="/home">home</Link>      
-                                    <span className="mx-2 text-muted">/</span> Posts
+                                        <Link className="text-light" to="/home">home</Link>
+                                        <span className="mx-2 text-muted">/</span> Posts
                                     </h6>
                                 </div>
                             </div>
@@ -135,29 +148,29 @@ function Postcrud() {
                             <Button variant="primary" onClick={() => setShowCreateModal(true)}>Create Post</Button>
                         </div>
                         <div className="table-responsive">
-                        <table className="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Title</th>
-                                    <th>Body</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {posts.map((post, index) => (
-                                    <tr key={post._id}>
-                                        <th scope="row">{index + 1}</th>
-                                        <td>{post.title}</td>
-                                        <td>{post.body}</td>
-                                        <td>
-                                            <Button variant="warning" onClick={() => { setCurrentPost(post); setShowEditModal(true); }}>Edit</Button>
-                                            <Button variant="danger" className="ml-2" onClick={() => { setCurrentPost(post); setShowDeleteModal(true); }}>Delete</Button>
-                                        </td>
+                            <table className="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Title</th>
+                                        <th>Body</th>
+                                        <th>Actions</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {posts.map((post, index) => (
+                                        <tr key={post._id}>
+                                            <th scope="row">{index + 1}</th>
+                                            <td>{post.title}</td>
+                                            <td>{post.body}</td>
+                                            <td>
+                                                <Button variant="warning" onClick={() => { setCurrentPost(post); setShowEditModal(true); }}>Edit</Button>
+                                                <Button variant="danger" className="ml-2" onClick={() => { setCurrentPost(post); setShowDeleteModal(true); }}>Delete</Button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
@@ -272,6 +285,7 @@ function Postcrud() {
                     <Toaster />
                 </div>
             </div>
+            <Footer />
         </>
     );
 }

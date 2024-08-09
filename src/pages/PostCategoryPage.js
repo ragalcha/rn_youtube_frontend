@@ -7,6 +7,8 @@ import { Modal, Button } from 'react-bootstrap';
 import { getCookie, setCookie } from '../utility/cookieUtils';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import Footer from '../Components/Footer';
+import Loading from '../Components/Loading';
 function PostCategoryPage() {
     const navigate = useNavigate();
     const [categories, setCategories] = useState([]);
@@ -15,6 +17,7 @@ function PostCategoryPage() {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [currentCategory, setCurrentCategory] = useState(null);
     const [newCategory, setNewCategory] = useState({ title: '', description: '' });
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const user = getCookie('user');
@@ -32,9 +35,10 @@ function PostCategoryPage() {
 
     const fetchCategories = async () => {
         try {
-            const response = await axios.get('https://rn-youtube-backend.onrender.com/api/v1/category/categories');
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/category/categories`);
             console.log(response.data.data);
             setCategories(response.data.data);
+            setLoading(false);
         } catch (error) {
             console.error('Error fetching categories:', error);
             toast.error('Failed to fetch categories.');
@@ -43,7 +47,7 @@ function PostCategoryPage() {
 
     const handleCreateCategory = async () => {
         try {
-            const response = await axios.post('https://rn-youtube-backend.onrender.com/api/v1/category/create', newCategory);
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/category/create`, newCategory);
             toast.success('Category created successfully.');
             fetchCategories();
             setShowCreateModal(false);
@@ -56,7 +60,7 @@ function PostCategoryPage() {
 
     const handleUpdateCategory = async () => {
         try {
-            const response = await axios.put(`https://rn-youtube-backend.onrender.com/api/v1/category/update/${currentCategory._id}`, currentCategory);
+            const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/v1/category/update/${currentCategory._id}`, currentCategory);
             toast.success('Category updated successfully.');
             fetchCategories();
             setShowEditModal(false);
@@ -68,7 +72,7 @@ function PostCategoryPage() {
 
     const handleDeleteCategory = async () => {
         try {
-            await axios.delete(`https://rn-youtube-backend.onrender.com/api/v1/category/delete/${currentCategory._id}`);
+            await axios.delete(`${process.env.REACT_APP_API_URL}/api/v1/category/delete/${currentCategory._id}`);
             toast.success('Category deleted successfully.');
             fetchCategories();
             setShowDeleteModal(false);
@@ -77,138 +81,146 @@ function PostCategoryPage() {
             toast.error('Failed to delete category.');
         }
     };
-
+    if (loading) {
+        return (
+           <Loading
+           text = "Categories"
+           title = "Categories"
+           />
+        )
+    }
     return (
         <>
-          <div className="main clearfix position-relative">
-            <Header />
-            <div className="main_about clearfix">
-                <section id="center" className="center_blog">
-                    <div className="container-xl">
-                        <div className="row center_o1">
-                            <div className="col-md-12">
-                                <h2 className="text-white">Categories</h2>
-                                <h6 className="mb-0 mt-3 fw-normal col_red">
-                                <Link className="text-light" to="/home">Home</Link>
-                                    <span className="mx-2 text-muted">/</span> About Us
-                                </h6>
+            <div className="main clearfix position-relative">
+                <Header />
+                <div className="main_about clearfix">
+                    <section id="center" className="center_blog">
+                        <div className="container-xl">
+                            <div className="row center_o1">
+                                <div className="col-md-12">
+                                    <h2 className="text-white">Categories</h2>
+                                    <h6 className="mb-0 mt-3 fw-normal col_red">
+                                        <Link className="text-light" to="/home">Home</Link>
+                                        <span className="mx-2 text-muted">/</span> Categories
+                                    </h6>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </section>
-            </div>
-            <div className="main clearfix position-relative">
-                <div className="container">
-                    <div className="d-flex justify-content-between mb-3">
-                        <h2 className="text-white">Categories</h2>
-                        <Button variant="primary" onClick={() => setShowCreateModal(true)}>Create Category</Button>
-                    </div>
-                    <div className="table-responsive">
-                    <table className="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Name</th>
-                                <th>Description</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {categories.map((category, index) => (
-                                <tr key={category._id}>
-                                    <th scope="row">{index + 1}</th>
-                                    <td>{category.title}</td>
-                                    <td>{category.description}</td>
-                                    <td>
-                                        <Button variant="warning" onClick={() => { setCurrentCategory(category); setShowEditModal(true); }}>Edit</Button>
-                                        <Button variant="danger" className="ml-2" onClick={() => { setCurrentCategory(category); setShowDeleteModal(true); }}>Delete</Button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                    </div>
+                    </section>
                 </div>
-
-                {/* Create Category Modal */}
-                <Modal show={showCreateModal} onHide={() => setShowCreateModal(false)}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Create Category</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <div className="form-group">
-                            <label>Title</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                value={newCategory.title}
-                                onChange={(e) => setNewCategory({ ...newCategory, title: e.target.value })}
-                            />
+                <div className="main clearfix position-relative">
+                    <div className="container">
+                        <div className="d-flex justify-content-between mb-3">
+                            <h2 className="text-white">Categories</h2>
+                            <Button variant="primary" onClick={() => setShowCreateModal(true)}>Create Category</Button>
                         </div>
-                        <div className="form-group">
-                            <label>Description</label>
-                            <textarea
-                                className="form-control"
-                                rows="3"
-                                value={newCategory.description}
-                                onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })}
-                            ></textarea>
+                        <div className="table-responsive">
+                            <table className="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Description</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {categories.map((category, index) => (
+                                        <tr key={category._id}>
+                                            <th scope="row">{index + 1}</th>
+                                            <td>{category.title}</td>
+                                            <td>{category.description}</td>
+                                            <td>
+                                                <Button variant="warning" onClick={() => { setCurrentCategory(category); setShowEditModal(true); }}>Edit</Button>
+                                                <Button variant="danger" className="ml-2" onClick={() => { setCurrentCategory(category); setShowDeleteModal(true); }}>Delete</Button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
                         </div>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={() => setShowCreateModal(false)}>Close</Button>
-                        <Button variant="primary" onClick={handleCreateCategory}>Save Changes</Button>
-                    </Modal.Footer>
-                </Modal>
+                    </div>
 
-                {/* Edit Category Modal */}
-                <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Edit Category</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <div className="form-group">
-                            <label>Title</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                value={currentCategory?.title || ''}
-                                onChange={(e) => setCurrentCategory({ ...currentCategory, title: e.target.value })}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Description</label>
-                            <textarea
-                                className="form-control"
-                                rows="3"
-                                value={currentCategory?.description || ''}
-                                onChange={(e) => setCurrentCategory({ ...currentCategory, description: e.target.value })}
-                            ></textarea>
-                        </div>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={() => setShowEditModal(false)}>Close</Button>
-                        <Button variant="primary" onClick={handleUpdateCategory}>Save Changes</Button>
-                    </Modal.Footer>
-                </Modal>
+                    {/* Create Category Modal */}
+                    <Modal show={showCreateModal} onHide={() => setShowCreateModal(false)}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Create Category</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <div className="form-group">
+                                <label>Title</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    value={newCategory.title}
+                                    onChange={(e) => setNewCategory({ ...newCategory, title: e.target.value })}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>Description</label>
+                                <textarea
+                                    className="form-control"
+                                    rows="3"
+                                    value={newCategory.description}
+                                    onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })}
+                                ></textarea>
+                            </div>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={() => setShowCreateModal(false)}>Close</Button>
+                            <Button variant="primary" onClick={handleCreateCategory}>Save Changes</Button>
+                        </Modal.Footer>
+                    </Modal>
 
-                {/* Delete Category Modal */}
-                <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Delete Category</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        Are you sure you want to delete this category?
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>Cancel</Button>
-                        <Button variant="danger" onClick={handleDeleteCategory}>Delete</Button>
-                    </Modal.Footer>
-                </Modal>
+                    {/* Edit Category Modal */}
+                    <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Edit Category</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <div className="form-group">
+                                <label>Title</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    value={currentCategory?.title || ''}
+                                    onChange={(e) => setCurrentCategory({ ...currentCategory, title: e.target.value })}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>Description</label>
+                                <textarea
+                                    className="form-control"
+                                    rows="3"
+                                    value={currentCategory?.description || ''}
+                                    onChange={(e) => setCurrentCategory({ ...currentCategory, description: e.target.value })}
+                                ></textarea>
+                            </div>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={() => setShowEditModal(false)}>Close</Button>
+                            <Button variant="primary" onClick={handleUpdateCategory}>Save Changes</Button>
+                        </Modal.Footer>
+                    </Modal>
 
-                <Toaster />
+                    {/* Delete Category Modal */}
+                    <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Delete Category</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            Are you sure you want to delete this category?
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>Cancel</Button>
+                            <Button variant="danger" onClick={handleDeleteCategory}>Delete</Button>
+                        </Modal.Footer>
+                    </Modal>
+
+                    <Toaster />
+                </div>
             </div>
-            </div>
+            <Footer />
         </>
     );
 }

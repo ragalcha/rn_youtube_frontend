@@ -11,7 +11,8 @@ function Movies() {
 	const [userRole, setUserRole] = useState(null);
 	const [roundNo, setRoundNo] = useState(0);
 	const [savedPosts, setSavedPosts] = useState([]);
-
+	const [activeDays, setActiveDays] = useState(0);
+    const [data , setData] = useState([]);
 	useEffect(() => {
 		const fetchPosts = async () => {
 			const user = getCookie('user');
@@ -19,13 +20,17 @@ function Movies() {
 			try {
 				if (user) {
 					setUserId(user._id);
-					
-					if (user.userRole.name === 'Admin') {
+					if (user?.userRole?.name == 'Admin') {
 						setUserRole('Admin');
+						console.log("i am admin", userRole);
+					}
+					if (user.trialActive) {
+						setActiveDays(getCookie('activeDays') ? getCookie('activeDays') : getCookie('SubscriptionActiveDays'));
+						console.log("i am active days----->", getCookie('activeDays'));
 					}
 				}
 
-				const response = await axios.get('https://rn-youtube-backend.onrender.com/api/v1/post/posts', {
+				const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/post/posts`, {
 					headers: {
 						'Authorization': `Bearer ${getCookie('accessToken')}`
 					}
@@ -45,30 +50,39 @@ function Movies() {
 
 		const fetchSavedPosts = async () => {
 			try {
-          
 
-                const response = await axios.get('https://rn-youtube-backend.onrender.com/api/v1/like/liked', {
-                    headers: {
-                        'Authorization': `Bearer ${getCookie('accessToken')}`
-                    }
-                });
 
-                // Directly set posts from the response data
-                const data = response.data.data.map(like => ({
+				const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/like/liked`, {
+					headers: {
+						'Authorization': `Bearer ${getCookie('accessToken')}`
+					}
+				});
+
+				// Directly set posts from the response data
+				console.log("Saved video00002 -->", response.data.data);
+				if(response.data.data.length>=1){
+				    const data01 = response.data.data.map(like => ({
 					like: like._id,
 					videoId: like.video._id
 				}));
-                console.log("Saved video on movies componente-->", data);
+				console.log("i am inside a function---------------------->", data01);
 
-                if (Array.isArray(data)) {
-                    setSavedPosts(data);
-                } else {
-                    console.error('Unexpected response format:', data);
-                    setPosts([]);
-                }
-            } catch (error) {
-                console.error('Error fetching posts:', error);
-            }
+				if (Array.isArray(data01)) {
+					setSavedPosts(data01);
+					console.log("Saved video on movies componente on savedpost usestate-->", data01);
+				} else {
+					console.error('Unexpected response format:', data);
+					setPosts([]);
+				}
+				setData(data01);
+			   }else{
+				   setData([]);
+			   }
+				
+
+			} catch (error) {
+				console.error('Error fetching posts:', error);
+			}
 		}
 
 		fetchPosts();
@@ -76,15 +90,15 @@ function Movies() {
 	}, []);
 	const handleLike = async (post) => {
 		try {
-            console.log("post----------------------->id", post);
+			console.log("post----------------------->id", post);
 
-			const response = await axios.post(`https://rn-youtube-backend.onrender.com/api/v1/like/like/${post}`, {
+			const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/like/like/${post}`, {
 				headers: {
 					'Authorization': `Bearer ${getCookie('accessToken')}`
 				}
 			});
-            fetchSavedPosts();
-		
+			fetchSavedPosts();
+
 		} catch (error) {
 			console.error('Error fetching posts:', error);
 		}
@@ -92,18 +106,18 @@ function Movies() {
 
 	const handleUnLike = async (post) => {
 		try {
-            
-			console.log("unliked ----->",post);
 
-			const response = await axios.delete(`https://rn-youtube-backend.onrender.com/api/v1/like/unlike/${post}`, {
+			console.log("unliked ----->", post);
+
+			const response = await axios.delete(`${process.env.REACT_APP_API_URL}/api/v1/like/unlike/${post}`, {
 				headers: {
 					'Authorization': `Bearer ${getCookie('accessToken')}`
 				}
 			});
 
 			fetchSavedPosts();
-         
-			
+
+
 		} catch (error) {
 			console.error('Error fetching posts:', error);
 		}
@@ -111,33 +125,40 @@ function Movies() {
 
 	const fetchSavedPosts = async () => {
 		try {
-	  
 
-			const response = await axios.get('https://rn-youtube-backend.onrender.com/api/v1/like/liked', {
+
+			const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/like/liked`, {
 				headers: {
 					'Authorization': `Bearer ${getCookie('accessToken')}`
 				}
 			});
 
 			// Directly set posts from the response data
-			const data = response.data.data.map(like => ({
+			if(response.data.data.length){
+			const data01 = response.data.data.map(like => ({
 				like: like._id,
 				videoId: like.video._id
 			}));
-			console.log("Saved video on movies componente-->", data);
-
-			if (Array.isArray(data)) {
-				setSavedPosts(data);
+			if (Array.isArray(data01)) {
+				setSavedPosts(data01);
 			} else {
 				console.error('Unexpected response format:', data);
 				setPosts([]);
 			}
+			setData(data01);
+		   }else{
+			   setSavedPosts([]);
+			   setData([]);
+		   }
+			
+
+		
 		} catch (error) {
 			console.error('Error fetching posts:', error);
 		}
 	}
 
-	const isIdInArray =  (array, videoIdToCheck) => {
+	const isIdInArray = (array, videoIdToCheck) => {
 		return array.some(item => item.videoId === videoIdToCheck);
 	};
 
@@ -164,6 +185,23 @@ function Movies() {
 					</div>
 				</div>
 			</div>
+			<div className="modal fade" id="exampleModal07" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div className="modal-dialog">
+					<div className="modal-content">
+						<div className="modal-header">
+							<h5 className="modal-title" id="exampleModalLabel">Subscribtion to watch videos</h5>
+							<button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div className="modal-body">
+							<p>You have not any active plan Please Subscribtion any plan</p>
+						</div>
+						<div className="modal-footer">
+							<button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						</div>
+
+					</div>
+				</div>
+			</div>
 			<section id="spec" className="p_3 bg_dark">
 				<div className="container-xl">
 					<div className="row stream_1 text-center">
@@ -182,6 +220,10 @@ function Movies() {
 									</>)}
 									{!userId && (<>
 										<button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal01"><span class="paly-btn"><i class="fa fa-play" style={{ color: "white" }}></i></span></button>
+
+									</>)}
+									{activeDays <= 0 && userId && (<>
+										<button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal07"><span class="paly-btn"><i class="fa fa-play" style={{ color: "white" }}></i></span></button>
 
 									</>)}
 
@@ -208,22 +250,23 @@ function Movies() {
 											{/* <div className= "like-icon">
 												<h5><i className="fa fa-heart-o " onClick={handleLike(post._id)} style={{ fontSize: '26px', color: 'red' }}>  </i></h5>
 											</div> */}
-											{isIdInArray(savedPosts, post._id) && (<> 
-												<div className= "like-icon">
-												  <h5><i className="fa fa-heart "  onClick={() => handleUnLike(findLikeIdByVideoId(savedPosts,post._id))} style={{ fontSize: '26px', color: 'red' }}>  </i></h5>
-											    </div>
+											{isIdInArray(savedPosts, post._id) && (<>
+												<div className="like-icon">
+													<h5><i className="fa fa-heart " onClick={() => handleUnLike(findLikeIdByVideoId(savedPosts, post._id))} style={{ fontSize: '26px', color: 'red' }}>  </i></h5>
+												</div>
 											</>)}
-											{!isIdInArray(savedPosts, post._id) && (<> 
-												<div className= "like-icon">
-												  <h5><i className="fa fa-heart-o" onClick={() => handleLike(post._id)}  style={{ fontSize: '26px', color: 'red' }}>  </i></h5>
-											    </div>
+											{!isIdInArray(savedPosts, post._id) && (<>
+												<div className="like-icon">
+													<h5><i className="fa fa-heart-o" onClick={() => handleLike(post._id)} style={{ fontSize: '26px', color: 'red' }}>  </i></h5>
+												</div>
 											</>)}
+
 										</div>
 									</div>
 								</div>
 
 
-								{userRole == 'Admin' && (<> 
+								{userRole == 'Admin' && (<>
 									<div class="spec_1im1 clearfix edit-video-for-admin">
 										<h5 className="mb-0 mt-4 text-uppercase bg-success p-2">
 											<Link className="nav-link" to={`/editpost/${post._id}`}>Edit<i className="fa fa-edit ms-1"></i></Link>

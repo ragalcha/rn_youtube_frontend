@@ -6,6 +6,8 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { getCookie } from '../utility/cookieUtils';
 import Header from '../Components/Header';
+import Footer from '../Components/Footer';
+import Loading from '../Components/Loading';
 
 function PostPage() {
     const navigate = useNavigate();
@@ -16,6 +18,7 @@ function PostPage() {
     const [imdbScore, setImdbScore] = useState('');
     const [categories, setCategories] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -29,7 +32,7 @@ function PostPage() {
             formData.append('postTags', JSON.stringify(selectedCategories)); // Store IDs as JSON string
             formData.append('imdbScore', imdbScore);
 
-            const response = await axios.post('https://rn-youtube-backend.onrender.com/api/v1/post/createpost', formData, {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/post/createpost`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${accessToken}` // Use the access token from cookies
@@ -57,8 +60,9 @@ function PostPage() {
 
         const fetchCategories = async () => {
             try {
-                const response = await axios.get('https://rn-youtube-backend.onrender.com/api/v1/category/categories');
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/category/categories`);
                 setCategories(response.data.data); // Set categories in state
+                setLoading(false);
             } catch (error) {
                 console.error("Error fetching categories:", error); // Handle and log any errors
             }
@@ -66,7 +70,14 @@ function PostPage() {
 
         fetchCategories();
     }, [navigate]);
-
+    // if (loading) {
+    //     return (
+    //        <Loading
+    //        text = "Posts"
+    //        title = "Posts"
+    //        />
+    //     )
+    // }
     return (
         <>
             <div className="main clearfix position-relative">
@@ -159,6 +170,7 @@ function PostPage() {
                 </div>
                 <div className="underlay-black"></div>
             </div>
+            <Footer />
         </>
     );
 }

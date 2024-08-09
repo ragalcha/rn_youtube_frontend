@@ -6,11 +6,13 @@ import { Toaster } from "react-hot-toast";
 import { toast } from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import Header from '../Components/Header';
+import Footer from '../Components/Footer';
+import Loading from '../Components/Loading';
 
 function EditPostPage() {
     const navigate = useNavigate();
     const { postId } = useParams();
-
+    const [loading, setLoaing] = useState(true);
     // Create refs for each input field
     const titleRef = useRef(null);
     const bodyRef = useRef(null);
@@ -37,13 +39,13 @@ function EditPostPage() {
         // Fetch all tags
         const fetchTags = async () => {
             try {
-                const response = await axios.get('https://rn-youtube-backend.onrender.com/api/v1/tags', {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/category/categories`, {
                     headers: {
                         'Authorization': `Bearer ${getCookie('accessToken')}`
                     }
                 });
-                setAllTags(response.data.tags); // Adjust based on your response structure
-                console.log("Tags", response.data.tags);
+                setAllTags(response.data.data); // Adjust based on your response structure
+                console.log("Tags-->", response.data.data);
             } catch (error) {
                 console.error('Error fetching tags:', error);
                 // toast.error("Failed to load tags");
@@ -53,7 +55,7 @@ function EditPostPage() {
         // Fetch the specific post
         const fetchPost = async () => {
             try {
-                const response = await axios.get(`https://rn-youtube-backend.onrender.com/api/v1/post/post/${postId}`, {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/post/post/${postId}`, {
                     headers: {
                         'Authorization': `Bearer ${getCookie('accessToken')}`
                     }
@@ -90,7 +92,7 @@ function EditPostPage() {
             formData.append('postTags', postTags.split(',').map(tag => tag.trim())); // Convert string back to array
             formData.append('imdbScore', imdbScore);
 
-            const response = await axios.put(`https://rn-youtube-backend.onrender.com/api/v1/post/updatepost/${postId}`, formData, {
+            const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/v1/post/updatepost/${postId}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${accessToken}`
@@ -103,6 +105,16 @@ function EditPostPage() {
             toast.error("Failed to update post");
         }
     };
+
+    // if (loading) {
+    //     return (
+    //        <Loading
+    //        text = ""
+    //        title = {categoryName}
+    //        />
+    //     )
+    // }
+
 
     return (
         <>
@@ -134,9 +146,9 @@ function EditPostPage() {
                         ref={bodyRef}
                     />
                     {/* Show existing image URL if available */}
-                    {image && <img src={image} alt="Current"  width="200" height="100" className="current-image" />}
+                    {image && <img src={image} alt="Current" width="200" height="100" className="current-image" />}
                     <br />
-                    <a className="text-white "href={image} target = "blank">{image}</a>
+                    <a className="text-white " href={image} target="blank">{image}</a>
                     <input
                         type="file"
                         className="login-username"
@@ -187,6 +199,7 @@ function EditPostPage() {
                 </div>
                 <div className="underlay-black"></div>
             </div>
+            <Footer />
         </>
     );
 }

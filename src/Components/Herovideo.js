@@ -4,27 +4,38 @@ import { getCookie } from '../utility/cookieUtils';
 import { Link } from 'react-router-dom';
 import { Toaster } from "react-hot-toast";
 import { toast } from "react-hot-toast";
+import Footer from './Footer';
+import Header from './Header';
 
 function HeroVideo() {
     const [posts, setPosts] = useState([]);
-    const [userId, setUserId] = useState(null);
+    const [userId, setUserId] = useState(0);
     const [userRole, setUserRole] = useState(null);
     const userd_id = getCookie('user._id');
+    const [activeDays, setActiveDays] = useState(0);
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
+
         const fetchPosts = async () => {
             const user = getCookie('user');
 
             try {
                 if (user) {
                     setUserId(user._id);
-                    if (user.userRole.name == 'Admin') {
+                    if (user?.userRole?.name == 'Admin') {
                         setUserRole('Admin');
                         console.log("i am admin", userRole);
+                    }
+                    if (user.trialActive) {
+                        setActiveDays(getCookie('activeDays') ? getCookie('activeDays') : getCookie('SubscriptionActiveDays'));
+                        console.log("i am active days----->", getCookie('activeDays'));
                     }
                 }
                 console.log("userId------------->", userId, userRole);
                 console.log("user constant id ", userd_id);
-                const response = await axios.get('https://rn-youtube-backend.onrender.com/api/v1/post/recentposts');
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/post/recentposts`);
+                setLoading(false);
                 console.log("respons-------------->e", response);
                 const data = response.data;
                 if (Array.isArray(data.recentPosts)) {
@@ -41,6 +52,51 @@ function HeroVideo() {
 
         fetchPosts();
     }, []);
+    if (loading) {
+        return (
+            <>
+             <div className="main clearfix position-relative">
+             <Header />
+                <div className="main_2 clearfix">
+                    <section id="center" className="center_home">
+                        <div id="carouselExampleCaptions" className="carousel slide" data-bs-ride="carousel">
+                            <div className="carousel-indicators"></div>
+                            <div className="loding-custom">
+                                <div className="spinner-grow text-primary" role="status">
+                                    <span className="sr-only">Loading...</span>
+                                </div>
+                                <div className="spinner-grow text-secondary" role="status">
+                                    <span className="sr-only">Loading...</span>
+                                </div>
+                                <div className="spinner-grow text-success" role="status">
+                                    <span className="sr-only">Loading...</span>
+                                </div>
+                                <div className="spinner-grow text-danger" role="status">
+                                    <span className="sr-only">Loading...</span>
+                                </div>
+                                <div className="spinner-grow text-warning" role="status">
+                                    <span className="sr-only">Loading...</span>
+                                </div>
+                                <div className="spinner-grow text-info" role="status">
+                                    <span className="sr-only">Loading...</span>
+                                </div>
+                                <div className="spinner-grow text-light" role="status">
+                                    <span className="sr-only">Loading...</span>
+                                </div>
+                                <div className="spinner-grow text-dark" role="status">
+                                    <span className="sr-only">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                </div>
+               
+                <Footer/>
+
+            </>
+        );
+    }
     return (
         <>
             <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -56,6 +112,24 @@ function HeroVideo() {
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="modal fade" id="exampleModal02" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="exampleModalLabel">Subscribtion to watch videos</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <p>You have not any active plan Please Subscribtion any plan</p>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -101,10 +175,15 @@ function HeroVideo() {
                                                 <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"><i className="fa fa-youtube-play me-1"></i> Watch Trailer</button>
                                             </h5>
                                         </>)}
-                                        {userId && (<>
+                                        {activeDays <= 0 && userId && (<>
                                             <h5 className="mb-0 mt-4 text-uppercase">
-                                            {/* <Link className="nav-link active" to="/home">Home</Link> */}
-                                            <Link  className="button"  to={`/video/${post._id}`}><i className="fa fa-youtube-play me-1"></i> Watch Trailer</Link>
+                                                <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal02"><i className="fa fa-youtube-play me-1"></i> Watch Trailer</button>
+                                            </h5>
+                                        </>)}
+                                        {userId && activeDays >= 1 && (<>
+                                            <h5 className="mb-0 mt-4 text-uppercase">
+                                                {/* <Link className="nav-link active" to="/home">Home</Link> */}
+                                                <Link className="button" to={`/video/${post._id}`}><i className="fa fa-youtube-play me-1"></i> Watch Trailer</Link>
                                             </h5>
                                         </>)}
                                     </div>

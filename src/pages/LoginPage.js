@@ -5,6 +5,7 @@ import { toast } from 'react-hot-toast';
 import axios from 'axios';
 import { setCookie, getCookie, removeCookie } from '../utility/cookieUtils';
 import Header from '../Components/Header';
+import Footer from '../Components/Footer';
 function LoginPage() {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
@@ -15,15 +16,54 @@ function LoginPage() {
       console.log('email', email, 'password', password);
       try {
         console.log('email', email, 'password', password);
-        const response = await axios.post('https://rn-youtube-backend.onrender.com/api/v1/user/login', {
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/user/login`, {
           email,
           password
         });
-         console.log(response.data.data.user[0]._id);
+         console.log("================",response.data.data.user[0]);
          toast.success(response.data.message);
          setCookie('user', response.data.data.user[0], { maxAge: 3600 }); // Set cookie for 1 hour
          setCookie('accessToken', response.data.data.accessToken, { maxAge: 3600 }); // Set cookie for 1 hour
          setCookie('refreshToken', response.data.data.refreshToken, { maxAge: 3600 }); // Set cookie for 1 hour
+         if(response.data.data.user[0].trialActive){
+            const userDetails = response.data.data.user[0];
+            const trialExpiresAt = new Date(userDetails.trialExpiresAt);
+            const trialStartedAt = new Date(userDetails.trialStartedAt);
+            const currentDate = new Date();
+            const startOfTrial = new Date(trialStartedAt.getUTCFullYear(), trialStartedAt.getUTCMonth(), trialStartedAt.getUTCDate());
+            const endOfTrial = new Date(trialExpiresAt.getUTCFullYear(), trialExpiresAt.getUTCMonth(), trialExpiresAt.getUTCDate());
+            const today = new Date(currentDate.getUTCFullYear(), currentDate.getUTCMonth(), currentDate.getUTCDate());
+            const timeDiff = endOfTrial - today;
+            const daysRemaining = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+            
+            // Adjust for the trial starting date, if needed
+            // Ensure the trial does not go below 0
+            const daysSinceStart = Math.floor((today - startOfTrial) / (1000 * 60 * 60 * 24));
+            const totalTrialDays = Math.floor((endOfTrial - startOfTrial) / (1000 * 60 * 60 * 24));
+
+            const effectiveDaysRemaining = Math.max(0, totalTrialDays - daysSinceStart);
+            setCookie('activeDays',effectiveDaysRemaining, { maxAge: 3600 });
+
+         }
+         if(response.data.data.user[0].subscriptionActive){
+          const userDetails = response.data.data.user[0];
+          const subscripExpiresAt = new Date(userDetails.subscriptionExpiresAt);
+          const subscripStartedAt = new Date(userDetails.subscriptionStartedAt);
+      
+          const currentDate = new Date();
+          // Convert dates to UTC midnight
+          const startOfsubscrip = new Date(subscripStartedAt.getUTCFullYear(), subscripStartedAt.getUTCMonth(), subscripStartedAt.getUTCDate());
+          const endOfsubscrip = new Date(subscripExpiresAt.getUTCFullYear(), subscripExpiresAt.getUTCMonth(), subscripExpiresAt.getUTCDate());
+          const today = new Date(currentDate.getUTCFullYear(), currentDate.getUTCMonth(), currentDate.getUTCDate());
+
+          const timeDiff = endOfsubscrip - today;
+          const daysRemaining = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+          const daysSinceStart = Math.floor((today - startOfsubscrip) / (1000 * 60 * 60 * 24));
+          const totalsubscripDays = Math.floor((endOfsubscrip - startOfsubscrip) / (1000 * 60 * 60 * 24));
+          const effectiveDaysRemaining = Math.max(0, totalsubscripDays - daysSinceStart);
+          setCookie('SubscriptionActiveDays',effectiveDaysRemaining, { maxAge: 3600 });
+
+         }
          return navigate('/home');
       } catch (error) {
         console.log(error);
@@ -48,7 +88,7 @@ function LoginPage() {
                         <i className="fa fa-lock fa-stack-1x"></i>
                     </span>
                 </p>
-                <input type="email" className="login-username" autofocus="true" required="true" placeholder="Email" value={email}
+                <input type="email" className="login-username" autoFocus={true} required="true" placeholder="Email" value={email}
               onChange={(e) => setEmail(e.target.value)} />
                 <input type="password" className="login-password" required="true" placeholder="Password" value={password}
               onChange={(e) => setPassword(e.target.value)} />
@@ -63,6 +103,7 @@ function LoginPage() {
             </div>
             <div className="underlay-black"></div>
            </div>
+           <Footer/>
         </>
     );
 

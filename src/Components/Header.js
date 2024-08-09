@@ -23,7 +23,7 @@ function Header() {
             removeCookie('accessToken');
             removeCookie('refreshToken');
             return navigate('/login');
-            console.log("i am starting the logout the process");
+            // console.log("i am starting the logout the process");
             const response = await axios.post(
                 'https://rn-youtube-backend.onrender.com/api/v1/user/logout',
                  null, // No body data for this request
@@ -34,7 +34,7 @@ function Header() {
                     }
                 }
             );
-            console.log(response);
+            // console.log(response);
             toast.success(response.data.message);
             setUserId(null);
             removeCookie('user');
@@ -62,13 +62,13 @@ function Header() {
         if(user){
             setUserId(user._id);
             setUserName(user.userName);
-            setUserRole(user.userRole.name);
+            setUserRole(user?.userRole?.name);
         }
 
 
         const fetchTags = async () => {
             try {
-                const response = await axios.get('https://rn-youtube-backend.onrender.com/api/v1/category/categories', {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/category/categories`, {
                     headers: {
                         'Authorization': `Bearer ${getCookie('accessToken')}`
                     }
@@ -104,7 +104,12 @@ function Header() {
             window.removeEventListener('scroll', handleScroll);
         };
     }, []);
-
+//    if(loading){
+//     return (
+//         <>
+//         </>
+//     )
+//    }
     return (
         <div className="main_1 clearfix position-absolute top-0 w-100">
             <Toaster position="top-center" />
@@ -141,6 +146,7 @@ function Header() {
                                         <Link className="dropdown-item" to="/userrole">Create User Role</Link>
                                         <Link className="dropdown-item" to="/users">All Username</Link>
                                         <Link className="dropdown-item" to="/post/crud">All Post</Link>
+                                        <Link className="dropdown-item" to="/subscribtion/crud">Subscribtion plan</Link>
                                     </ul>
                                 </li>
                                 </>)}
