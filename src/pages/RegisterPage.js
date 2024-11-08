@@ -18,16 +18,16 @@ function RegisterPage() {
 
     const handleRegister = async (e) => {
         e.preventDefault();
-        console.log('firstName', firstName, 'lastName', lastName, 'email', email, 'password', password);
+        console.log('newfirstName', firstName, 'lastName', lastName, 'email', email, 'password', password);
         try {
 
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/user/register`, {
-                firstName,
-                lastName,
-                userName,
-                email,
-                password
-            });
+          const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/user/register`, {
+            firstName: "John",
+            lastName: "Doe",
+            userName: "rrr",
+            email: "john.doe@example.com",
+            password: "password123"
+        });
             console.log("hello-->", response);
             toast.success(response.data.message);
             return navigate('/login');

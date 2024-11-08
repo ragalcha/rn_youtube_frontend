@@ -152,14 +152,12 @@ function Footer() {
                     <div className="row footer_2 mt-4 pt-4">
                         <div className="col-md-4">
                             <div className="footer_2i">
-                                <h5 className="text-white">Questions? Call 0850-380-6444</h5>
+                                <h5 className="text-white">Questions? Call 9399707035</h5>
                                 <p className="text-muted mt-3">Format for custom post types that are not book or you can use else if to specify a second post type the same way as above.</p>
                                 <select name="categories" className="form-select mt-4 bg-transparent w-50 rounded-0 fw-bold" required="">
                                     <option value="">English</option>
-                                    <option>French</option>
-                                    <option>Hindi</option>
-                                    <option>American</option>
-                                    <option>German</option>
+                                    <option disabled>coming soon</option>
+
                                 </select>
                             </div>
                         </div>
@@ -205,7 +203,7 @@ function Footer() {
                 <div className="container-xl">
                     <div className="row footer_b1 text-center">
                         <div className="col-md-12">
-                            <p className="mb-0 text-muted">© 2013 Your Website Name. All Rights Reserved | Design by <a className="col_red" href="http://www.templateonweb.com">TemplateOnWeb</a></p>
+                            <p className="mb-0 text-muted">© 2024 Movie Hub. All Rights Reserved | Design by <b>Ramaiya Agalcha</b></p>
                         </div>
                     </div>
                 </div>
