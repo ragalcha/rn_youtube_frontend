@@ -22,11 +22,11 @@ function RegisterPage() {
         try {
 
           const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/user/register`, {
-            firstName: "John",
-            lastName: "Doe",
-            userName: "rrr",
-            email: "john.doe@example.com",
-            password: "password123"
+            firstName: firstName,
+            lastName: lastName,
+            userName: userName,
+            email: email,
+            password: password
         });
             console.log("hello-->", response);
             toast.success(response.data.message);

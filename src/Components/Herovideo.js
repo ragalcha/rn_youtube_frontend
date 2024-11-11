@@ -175,12 +175,12 @@ function HeroVideo() {
                                                 <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"><i className="fa fa-youtube-play me-1"></i> Watch Trailer</button>
                                             </h5>
                                         </>)}
-                                        {activeDays <= 0 && userId && (<>
+                                        {activeDays <= 0 && userId && !userRole && (<>
                                             <h5 className="mb-0 mt-4 text-uppercase">
                                                 <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal02"><i className="fa fa-youtube-play me-1"></i> Watch Trailer</button>
                                             </h5>
                                         </>)}
-                                        {userId && activeDays >= 1 && (<>
+                                        {((userId && activeDays >= 1) || userRole == "Admin") && (<>
                                             <h5 className="mb-0 mt-4 text-uppercase">
                                                 {/* <Link className="nav-link active" to="/home">Home</Link> */}
                                                 <Link className="button" to={`/video/${post._id}`}><i className="fa fa-youtube-play me-1"></i> Watch Trailer</Link>
