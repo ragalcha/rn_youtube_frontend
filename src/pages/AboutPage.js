@@ -2,6 +2,7 @@ import React from "react";
 import Header from "../Components/Header";
 import { Link } from 'react-router-dom';
 import Footer from "../Components/Footer";
+import PdfDownloadButton from "../Components/PdfDownloadButton";
 function AboutPage() {
     return (
         <>
@@ -51,9 +52,11 @@ function AboutPage() {
                             <div className="col-md-6">
                                 <div className="feature_1r clearfix">
                                     <div className="grid clearfix">
-                                        <figure className="effect-jazz mb-0">
-                                            <a href="#"><img src="img/movies.jpg" className="w-100" alt="Movies" /></a>
-                                        </figure>
+                                    <h3>To know More About Us Read below given PDF</h3>
+                                    <p className="mb-0"></p>
+                                    <div className="pdf-download ">
+                                      <PdfDownloadButton/>
+                                    </div>
                                     </div>
                                 </div>
                             </div>

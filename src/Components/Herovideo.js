@@ -19,6 +19,7 @@ function HeroVideo() {
 
         const fetchPosts = async () => {
             const user = getCookie('user');
+            console.log("here is cookies",user);
 
             try {
                 if (user) {
@@ -32,11 +33,11 @@ function HeroVideo() {
                         console.log("i am active days----->", getCookie('activeDays'));
                     }
                 }
-                console.log("userId------------->", userId, userRole);
-                console.log("user constant id ", userd_id);
+                console.log("userId and userRole------------->", userId, userRole);
+                // console.log("user constant id ", userd_id);
                 const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/post/recentposts`);
                 setLoading(false);
-                console.log("respons-------------->e", response);
+                console.log("respons-------------->", response);
                 const data = response.data;
                 if (Array.isArray(data.recentPosts)) {
                     setPosts(data.recentPosts);
