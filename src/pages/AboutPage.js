@@ -3,6 +3,8 @@ import Header from "../Components/Header";
 import { Link } from 'react-router-dom';
 import Footer from "../Components/Footer";
 import PdfDownloadButton from "../Components/PdfDownloadButton";
+import RaniPdfDownloadButton from "../Components/RaniPdfDownloadButton";
+import IndexPagePdfDownloadButton from "../Components/IndexPagePdfDownloadButton";
 function AboutPage() {
     return (
         <>
@@ -54,8 +56,14 @@ function AboutPage() {
                                     <div className="grid clearfix">
                                     <h3>To know More About Us Read below given PDF</h3>
                                     <p className="mb-0"></p>
-                                    <div className="pdf-download ">
+                                    <div className="pdf-download mb-3">
                                       <PdfDownloadButton/>
+                                    </div>
+                                    <div className="pdf-download mb-3">
+                                      <RaniPdfDownloadButton/>
+                                    </div>
+                                    <div className="pdf-download ">
+                                      <IndexPagePdfDownloadButton/>
                                     </div>
                                     </div>
                                 </div>

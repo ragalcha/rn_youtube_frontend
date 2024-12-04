@@ -1,19 +1,19 @@
 import React from 'react';
 
-const PdfDownloadButton = () => {
+const IndexPagePdfDownloadButton = () => {
     const handleDownload = () => {
-        const pdfPath = `/pdf/new_final_report_ramaiya_rahul.pdf`;
+        const pdfPath = `/pdf/index_page.pdf`;
         const link = document.createElement('a');
         link.href = pdfPath;
-        link.download = 'new_final_report_ramaiya_rahul.pdf';
+        link.download = 'index_page.pdf';
         link.click();
     };
 
     return (
         <button onClick={handleDownload} className="btn btn-primary">
-            Download Ramaiya PDF
+            Download Index Page PDF
         </button>
     );
 };
 
-export default PdfDownloadButton;
+export default IndexPagePdfDownloadButton;
