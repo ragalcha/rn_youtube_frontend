@@ -24,36 +24,51 @@ function CategoryPage() {
     useEffect(() => {
         console.log("hello i am useeffect");
         const fetchCategoryData = async () => {
-            const user = getCookie('user');
-
-            try {
-                if (user) {
-                    setUserId(user._id);
-
-                    if (user.userRole.name === 'Admin') {
-                        setUserRole('Admin');
-                    }
-                }
-
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/post/postsbytag/${categoryId}`, {
-                    headers: {
-                        'Authorization': `Bearer ${getCookie('accessToken')}`
-                    }
-                });
-                const data = response.data;
-                console.log("category data ---->???", response);
-                if (Array.isArray(data.posts)) {
-                    setCategoryData(data.posts);
-                } else {
-                    console.error('Unexpected response format:', data);
-                    setCategoryData([]);
-                }
-
-                setLoading(false);
-            } catch (error) {
-                console.error('Error fetching posts:', error);
-            }
-        };
+          const userCookie = getCookie('user');
+          let user = null;
+      
+          try {
+              // Handle both string and object cases
+              user = typeof userCookie === 'string' ? JSON.parse(userCookie) : userCookie;
+          } catch (error) {
+              console.error("Error parsing user cookie:", error);
+          }
+      
+          try {
+              if (user) {
+                  setUserId(user._id);
+                  if (user?.userRole?.name === 'Admin') {
+                      setUserRole('Admin');
+                  }
+              }
+      
+              const response = await axios.get(
+                  `${process.env.REACT_APP_API_URL}/api/v1/post/postsbytag/${categoryId}`, 
+                  {
+                      headers: {
+                          'Authorization': `Bearer ${getCookie('accessToken')}`
+                      }
+                  }
+              );
+      
+              const data = response.data;
+              console.log("Category data:", data);
+      
+              if (Array.isArray(data.posts)) {
+                  setCategoryData(data.posts);
+              } else {
+                  console.error('Unexpected response format:', data);
+                  setCategoryData([]);
+              }
+      
+              setLoading(false);
+          } catch (error) {
+              console.error('Error fetching posts:', error);
+              setLoading(false);
+          }
+      };
+      
+      
 
         fetchCategoryData();
     }, [categoryId]); // Dependency array with categoryId to refetch data when it changes
